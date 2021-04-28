@@ -60,5 +60,7 @@
 		</bean>
 	
 		<tx:annotation-driven transaction-manager="myTranscationManager"/>
+		
+		<mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
 			
 </beans>
