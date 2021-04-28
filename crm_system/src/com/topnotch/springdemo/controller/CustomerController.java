@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.topnotch.springdemo.entity.Customer;
@@ -25,5 +27,18 @@ public class CustomerController {
 		List<Customer> customersList = customerSerivce.getCustomers();
 		model.addAttribute("customers", customersList);
 		return "list-customers";
+	}
+	
+	@GetMapping("/showFormForAdd")
+	public String showFormForAdd(Model model) {
+		Customer customer = new Customer();
+		model.addAttribute("customer", customer);
+		return "customer-form";
+	}
+	
+	@PostMapping("/saveCustomer")
+	public String saveCustomer(@ModelAttribute("customer") Customer customer) {
+		customerSerivce.saveCustomer(customer);
+		return "redirect:/customer/list";
 	}
 }
