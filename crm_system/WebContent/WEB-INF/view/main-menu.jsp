@@ -7,6 +7,7 @@
 <title>Main Menu</title>
 </head>
 <body>
-	<h1>Welcome to the main menu</h1>
+	<h1>Welcome to the main menu</h1> <br> <br>
+	<a href="customer/list">List of Customers</a>
 </body>
 </html>
