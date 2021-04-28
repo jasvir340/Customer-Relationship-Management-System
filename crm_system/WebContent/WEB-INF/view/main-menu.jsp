@@ -9,5 +9,6 @@
 <body>
 	<h1>Welcome to the main menu</h1> <br> <br>
 	<a href="customer/list">List of Customers</a>
+	<% response.sendRedirect("customer/list"); %>
 </body>
 </html>
