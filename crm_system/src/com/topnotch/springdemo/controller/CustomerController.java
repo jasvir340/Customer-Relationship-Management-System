@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.topnotch.springdemo.entity.Customer;
 import com.topnotch.springdemo.service.CustomerService;
@@ -33,6 +34,15 @@ public class CustomerController {
 	public String showFormForAdd(Model model) {
 		Customer customer = new Customer();
 		model.addAttribute("customer", customer);
+		return "customer-form";
+	}
+	
+	@GetMapping("/showFormForUpdate")
+	public String showFormForUpdate(@RequestParam("customerId") int id, Model model) {
+		
+		Customer customer = customerSerivce.getCustomer(id);
+		model.addAttribute("customer", customer);
+		
 		return "customer-form";
 	}
 	
