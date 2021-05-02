@@ -7,8 +7,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 @Entity
 @Table(name = "customer")
+@SQLDelete(sql="UPDATE Customer SET is_deleted = 1 where id = ?")
+@Where(clause = "is_deleted <> 1")
 public class Customer {
 	
 	@Id
