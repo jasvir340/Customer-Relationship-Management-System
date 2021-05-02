@@ -2,12 +2,14 @@ package com.topnotch.springdemo.dao;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -21,10 +23,17 @@ public class CustomerDAOImpl implements CustomerDAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
+	private CriteriaBuilder criteriaBuilder;
+	
+	public CriteriaBuilder getCrtieriaBuilder(Session session) {
+		return session.getCriteriaBuilder();
+	}
+	
 	@Override
 	public List<Customer> getCustomers() {
 		
 		Session session = sessionFactory.getCurrentSession();
+		
 		
 		Query<Customer> query = session.createQuery("from Customer order by firstName,lastName",Customer.class);
 		
@@ -63,10 +72,18 @@ public class CustomerDAOImpl implements CustomerDAO {
 		
 		Session session = sessionFactory.getCurrentSession();
 		
-		Criteria criteria = session.createCriteria(Customer.class);
-		criteria.add(Restrictions.like("firstName", data)).add(Restrictions.like("lastName", data));
+		criteriaBuilder = getCrtieriaBuilder(session);
+		CriteriaQuery<Customer> crit = criteriaBuilder.createQuery(Customer.class);
+		Root<Customer> root = crit.from(Customer.class);
 		
-		return criteria.list();
+		Predicate firstNamePredicate = criteriaBuilder.like(root.get("firstName"), "%"+data+"%");
+		Predicate lastNamePredicate = criteriaBuilder.like(root.get("lastName"), "%"+data+"%");
+		
+		crit.select(root).where(criteriaBuilder.or(firstNamePredicate,lastNamePredicate));
+		
+		Query<Customer> query = session.createQuery(crit);
+		
+		return query.getResultList();
 		
 	}
 }
