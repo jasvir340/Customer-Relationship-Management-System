@@ -4,8 +4,10 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -54,5 +56,17 @@ public class CustomerDAOImpl implements CustomerDAO {
 		Customer customer = session.get(Customer.class, id);
 		
 		session.delete(customer);
+	}
+	
+	@Override
+	public List<Customer> searchCustomers(String data){
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		Criteria criteria = session.createCriteria(Customer.class);
+		criteria.add(Restrictions.like("firstName", data)).add(Restrictions.like("lastName", data));
+		
+		return criteria.list();
+		
 	}
 }
